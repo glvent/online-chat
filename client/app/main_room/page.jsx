@@ -8,6 +8,7 @@ const socket = io("http://localhost:3001");
 export default function Page() {
 	const [text, setText] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [name, setName] = useState(sessionStorage.getItem("name"));
 
 	useEffect(() => {
 		socket.emit("CLIENT_READY");
@@ -28,7 +29,7 @@ export default function Page() {
 
 	function sendMessage() {
 		if (!text) return;
-		socket.emit("SEND_MESSAGE", text);
+		socket.emit("SEND_MESSAGE", { text: text, owner: name });
 		setText("");
 	}
 
@@ -49,13 +50,19 @@ export default function Page() {
 		<>
 			<div className="grid w-screen h-screen place-items-center">
 				<div className="w-[25rem] h-[45rem] bg-zinc-700 rounded-lg flex flex-col">
-					<div className="flex flex-col gap-4 p-4 overflow-x-hidden overflow-y-auto custom-scrollbar scroll-m-4">
-						{messages.map((message, index) => (
-							<p
-								className="w-auto p-2 text-sm text-left rounded-md min-h-fit bg-zinc-800"
-								key={index}>
-								{message}
-							</p>
+					<div className="flex flex-col gap-2 p-4 overflow-x-hidden overflow-y-auto custom-scrollbar">
+						{messages.map((message, _) => (
+							<>
+								<p
+									className={`text-xs ${
+										name != message?.owner && "self-end"
+									}`}>
+									{message?.owner}
+								</p>
+								<p className="w-auto p-2 text-sm text-left rounded-md min-h-fit bg-zinc-800">
+									{message?.text}
+								</p>
+							</>
 						))}
 					</div>
 					<div className="flex self-end w-full gap-2 p-4 mt-auto">

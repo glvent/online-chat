@@ -12,6 +12,8 @@ const io = new Server(server, {
 
 let messages = [];
 
+console.log(messages);
+
 io.on("connection", (socket) => {
 	console.log("Connected to client!");
 
@@ -20,8 +22,9 @@ io.on("connection", (socket) => {
 	});
 
 	socket.on("SEND_MESSAGE", (message) => {
-		messages.push(message); // ADD NEW MESSAGE TO ARRAY
-		io.emit("SEND_MESSAGE", message); // BROADCAST THE NEW MESSAGE TO ALL CLIENTS
+		const newMessage = { text: message.text, owner: message.owner };
+		messages.push(newMessage); // ADD NEW MESSAGE TO ARRAY
+		io.emit("SEND_MESSAGE", newMessage); // BROADCAST THE NEW MESSAGE TO ALL CLIENTS
 	});
 
 	socket.on("CLEAR", () => {
