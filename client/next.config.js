@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+	experimental: {
+		serverActions: true,
+	},
+	env: {
+		HOST_IP: process.env.HOST_IP,
+	},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
